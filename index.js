@@ -9,14 +9,16 @@ require("dotenv").config();
 app.use(express.json());
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://book-store-alpha-seven.vercel.app",
-    ],
+    origin: ["http://localhost:5173", "https://book-store-alpha-seven.vercel.app"],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
 );
+
+// Root route
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
 
 // ROUTES
 const bookRoutes = require("./src/books/book.route");
@@ -28,18 +30,14 @@ app.use("/api/order", orderRoutes);
 app.use("/api/auth", userRoutes);
 app.use("/api/admin", adminRoutes);
 
+// DATABASE CONNECTION
 async function main() {
   await mongoose.connect(process.env.MONGOURL);
-
-  app.get("/", (req, res) => {
-    res.send("THIS IS WORKING WITH NODEMON");
-  });
+  console.log("MONGODB CONNECTED");
 }
+main().catch((err) => console.log(err));
 
-main()
-  .then(() => console.log("MONGODB CONNECTED"))
-  .catch((err) => console.log(err));
-
+// SERVER LISTENING
 app.listen(port, () => {
   console.log("SERVER STARTED AT PORT::" + port);
 });
