@@ -14,7 +14,7 @@ app.use(
     credentials: true,
   })
 );
-
+app.use(cors()); // Allows all origins (only for development)
 // ROUTES
 const bookRoutes = require("./src/books/book.route");
 const orderRoutes = require("./src/orders/order.route");
