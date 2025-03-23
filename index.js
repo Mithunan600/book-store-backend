@@ -9,10 +9,8 @@ require("dotenv").config();
 app.use(express.json());
 app.use(
   cors({
-    origin: [
-      "https://book-store-backend-theta-five.vercel.app",
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: ["https://book-store-backend-theta-five.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
@@ -22,22 +20,23 @@ const bookRoutes = require("./src/books/book.route");
 const orderRoutes = require("./src/orders/order.route");
 const userRoutes = require("./src/users/user.route");
 const adminRoutes = require("./src/stats/admin.stats");
+
 app.use("/api/books", bookRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/auth", userRoutes);
 app.use("/api/admin", adminRoutes);
 
+// ✅ MOVE THIS OUTSIDE main()
+app.get("/", (req, res) => {
+  res.send("THIS IS WORKING WITH NODEMON");
+});
+
 async function main() {
   await mongoose.connect(process.env.MONGOURL);
-
-  app.get("/", (req, res) => {
-    res.send("THIS IS WORKING WITH NODEMON");
-  });
+  console.log("MONGODB CONNECTED");
 }
 
-main()
-  .then(() => console.log("MONGODB CONNECTED"))
-  .catch((err) => console.log(err));
+main().catch((err) => console.log(err));
 
 app.listen(port, () => {
   console.log("SERVER STARTED AT PORT::" + port);
