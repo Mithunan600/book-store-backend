@@ -1,25 +1,23 @@
 const express = require("express");
 const User = require("./user.model");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const router = express.Router();
-
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// ✅ Add a GET route to test if `/api/auth` works
-router.get("/", (req, res) => {
-    res.status(200).send({ message: "User API is working!" });
-});
-
-// ✅ Existing Admin Login Route
 router.post("/admin", async (req, res) => {
     const { username, password } = req.body;
+    
     try {
         const admin = await User.findOne({ username });
         if (!admin) {
             return res.status(404).json({ message: "Admin not found!" });
         }
-        if (admin.password !== password) {
+
+        // ✅ Secure password check using bcrypt
+        const isPasswordValid = await bcrypt.compare(password, admin.password);
+        if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid password!" });
         }
 
