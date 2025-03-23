@@ -9,12 +9,13 @@ require("dotenv").config();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://book-store-backend-theta-five.vercel.app"],
+    origin: [
+      "http://localhost:5173",
+      "https://book-store-backend-theta-five.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
-app.use(cors()); // Allows all origins (only for development)
 // ROUTES
 const bookRoutes = require("./src/books/book.route");
 const orderRoutes = require("./src/orders/order.route");
